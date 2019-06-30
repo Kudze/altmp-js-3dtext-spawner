@@ -55,7 +55,7 @@ export default {
     /**
      * @param text - STRING text (maxlen: 256);
      * @param pos - OBJECT {x,y,z} pos || FUNCTION pos;
-     * @param options - OBJECT {dynamic} options;
+     * @param options - OBJECT {font, color, centre, scale, maxRenderDist} options;
      */
     new: (text, pos, {font = 0, color = [255, 255, 255, 255], centre = true, scale = 1, maxRenderDist = 20}) => {
         let id = findUnusedText3DID();
