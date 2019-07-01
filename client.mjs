@@ -19,7 +19,7 @@ let findUnusedText3DID = () => {
  * @param name 
  */
 let draw3dText = (text3D) => {
-    let pos = text3D.position;
+    let pos = text3D.getPosition();
 
     const [bol, _x, _y] = game.getScreenCoordFromWorldCoord(pos.x, pos.y, pos.z);
     const camCord = game.getGameplayCamCoords();
