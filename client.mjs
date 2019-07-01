@@ -19,7 +19,7 @@ let findUnusedText3DID = () => {
  * @param name 
  */
 let draw3dText = (text3D) => {
-    let pos = text3D.getPosition();
+    let pos = text3D.position;
 
     const [bol, _x, _y] = game.getScreenCoordFromWorldCoord(pos.x, pos.y, pos.z);
     const camCord = game.getGameplayCamCoords();
@@ -48,7 +48,6 @@ let draw3dText = (text3D) => {
         game.addTextComponentSubstringPlayerName(text3D.text);
         game.endTextCommandDisplayText(_x,_y + 0.025);
     }
-
 }
 
 export default {
@@ -57,61 +56,44 @@ export default {
      * @param pos - OBJECT {x,y,z} pos || FUNCTION pos;
      * @param options - OBJECT {font, color, centre, scale, maxRenderDist} options;
      */
-    new: (text, pos, {font = 0, color = [255, 255, 255, 255], centre = true, scale = 1, maxRenderDist = 20}) => {
+    new: (text, pos, {font = 0, color = [255, 255, 255, 255], centre = true, scale = 1, maxRenderDist = 20} = {}) => {
         let id = findUnusedText3DID();
 
         TEXT3D_LIST[id] = {
             text: text,
-            pos: pos,
+            _pos: pos,
             font: font,
             color: color,
-            center: centre,
+            centre: centre,
             scale: scale,
             maxRenderDist: maxRenderDist,
-            getPosition: () => { 
-                const posType = typeof this.pos;
+            getPosition() {
+                const posType = typeof this._pos;
 
                 if(posType === "function")
-                    return this.pos();
+                    return this._pos();
 
-                if(posType === "object") {
-                    if(this.pos.position !== undefined)
-                        return this.pos.position;
-
-                    if(this.pos.pos !== undefined)
-                        return this.pos.pos;
-
-                    return this.pos;
-                }
-
-                else alt.warn("altmp-js-3dtext-spawner unable to decypher this.pos in getPosition()");
-
-                return {
-                    x: 0,
-                    y: 0,
-                    z: 0
-                };
+                return this._pos;
             }
         };
 
         return {
-            id: id,
             destroy: () => {
-                PROPS_LIST[this.id] = undefined;
+                TEXT3D_LIST[id] = undefined;
             },
 
-            get position() {
-                return PROPS_LIST[this.id].getPosition();
+            getPosition() {
+                return TEXT3D_LIST[id].getPosition();
             },
-            set position(position) {
-                PROPS_LIST[this.id].pos = position;
+            setPosition(position) {
+                TEXT3D_LIST[id]._pos = position;
             },
 
-            get text() {
-                return PROPS_LIST[this.id].text;
+            getText() {
+                return TEXT3D_LIST[id].text;
             },
-            set text(text) {
-                PROPS_LIST[this.id].text = text;
+            setText(text) {
+                TEXT3D_LIST[id].text = text;
             }
         };
     }
