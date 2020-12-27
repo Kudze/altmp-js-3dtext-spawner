@@ -22,7 +22,7 @@ let draw3dText = (text3D) => {
     let pos = text3D.getPosition();
 
     const [bol, _x, _y] = game.getScreenCoordFromWorldCoord(pos.x, pos.y, pos.z);
-    const camCord = game.getGameplayCamCoords();
+    const camCord = game.getFinalRenderedCamCoord();
     const dist = game.getDistanceBetweenCoords(camCord.x,camCord.y,camCord.z, pos.x, pos.y, pos.z, 1);
 
     if (dist > text3D.maxRenderDist) return;
@@ -99,17 +99,9 @@ export default {
     }
 };
 
-alt.on(
-    'update',
-    () => {
-        TEXT3D_LIST.forEach(
-            (text3D) => {
-                if(text3D !== undefined) {
-                    draw3dText(
-                        text3D
-                    );
-                }
-            }
-        )
-    }
-)
+alt.everyTick(() => {
+    TEXT3D_LIST.forEach((text3D) => {
+        if(text3D !== undefined)
+            draw3dText(text3D);
+    });
+});
